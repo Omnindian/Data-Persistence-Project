@@ -14,7 +14,7 @@ public class MainManager : MonoBehaviour
     public GameObject GameOverText;
     
     private bool m_Started = false;
-    private int m_Points;
+    public static int m_Points;
     
     private bool m_GameOver = false;
 
@@ -22,6 +22,7 @@ public class MainManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        GameManager.Instance.GameRunning = true;
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
         
@@ -36,6 +37,11 @@ public class MainManager : MonoBehaviour
                 brick.onDestroyed.AddListener(AddPoint);
             }
         }
+    }
+
+    void Awake()
+    {
+        ScoreText.text = GameManager.Instance.PlayerName + " Score : " + m_Points;
     }
 
     private void Update()
@@ -65,12 +71,13 @@ public class MainManager : MonoBehaviour
     void AddPoint(int point)
     {
         m_Points += point;
-        ScoreText.text = $"Score : {m_Points}";
+        ScoreText.text = GameManager.Instance.PlayerName + " Score : " + m_Points;
     }
 
     public void GameOver()
     {
         m_GameOver = true;
+        GameManager.Instance.OnEndGame();
         GameOverText.SetActive(true);
     }
 }
