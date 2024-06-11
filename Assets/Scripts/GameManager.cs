@@ -2,9 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 
 
 public class GameManager : MonoBehaviour
@@ -13,6 +10,7 @@ public class GameManager : MonoBehaviour
 
     public string PlayerName;
     public int PlayerScore;
+    public float MusicVolume, SoundEffectVolume;
     public bool MusicOn, SoundEffectsOn, GameRunning;
     private HighScoreHandler highScoreHandler;
     
@@ -34,6 +32,7 @@ public class GameManager : MonoBehaviour
     {
         public string PlayerName;
         public int PlayerScore;
+        public float MusicVolume, SoundEffectVolume;
         public bool MusicOn, SoundEffectsOn;
     }
 
@@ -50,6 +49,8 @@ public class GameManager : MonoBehaviour
         data.PlayerScore = PlayerScore;
         data.MusicOn = MusicOn;
         data.SoundEffectsOn = SoundEffectsOn;
+        data.MusicVolume = MusicVolume;
+        data.SoundEffectVolume = SoundEffectVolume;
 
         string json = JsonUtility.ToJson(data);
 
@@ -69,6 +70,8 @@ public class GameManager : MonoBehaviour
             PlayerScore = data.PlayerScore;
             MusicOn = data.MusicOn;
             SoundEffectsOn = data.SoundEffectsOn;
+            MusicVolume = data.MusicVolume;
+            SoundEffectVolume = data.SoundEffectVolume;
         }
     }
 
@@ -80,15 +83,16 @@ public class GameManager : MonoBehaviour
         Debug.Log("End Score is " + PlayerScore + " for " + PlayerName);
     }
 
-        public void Exit()
-    {
-        SavePlayerInfo();
-        #if UNITY_EDITOR
-            EditorApplication.ExitPlaymode();
-        #else
-            Application.Quit();
-        #endif
-    }
+    // public void ExitButtonPressed()
+    // {
+    //     Debug.Log("Player Name: " + PlayerName + " | Player Score: " + PlayerScore);
+    //     SavePlayerInfo();
+    //     #if UNITY_EDITOR
+    //         EditorApplication.ExitPlaymode();
+    //     #else
+    //         Application.Quit();
+    //     #endif
+    // }
 
 
 }

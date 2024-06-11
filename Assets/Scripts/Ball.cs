@@ -6,10 +6,12 @@ using UnityEngine;
 public class Ball : MonoBehaviour
 {
     private Rigidbody m_Rigidbody;
+    private AudioSource brickSound;
 
     void Start()
     {
         m_Rigidbody = GetComponent<Rigidbody>();
+        brickSound = GetComponent<AudioSource>();
     }
     
     private void OnCollisionExit(Collision other)
@@ -33,4 +35,18 @@ public class Ball : MonoBehaviour
 
         m_Rigidbody.velocity = velocity;
     }
+
+    void OnCollisionEnter(Collision collisionInfo)
+    {
+        if (collisionInfo.collider.gameObject.tag == "Brick")
+        PlayBrickSound();
+    }
+
+        private void PlayBrickSound()
+    {
+        // Attach sound to when brick is hit
+        // to use in Brick script
+        brickSound.Play();
+    }
+
 }

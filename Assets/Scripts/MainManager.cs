@@ -12,17 +12,31 @@ public class MainManager : MonoBehaviour
 
     public Text ScoreText;
     public GameObject GameOverText;
-    
+
     private bool m_Started = false;
     public static int m_Points;
     
     private bool m_GameOver = false;
-
+    [SerializeField]
+    private GameObject attachedToMusicAudio, brickSoundsSource;
+    private AudioSource musicAudio, brickSounds;
     
     // Start is called before the first frame update
     void Start()
     {
         GameManager.Instance.GameRunning = true;
+        musicAudio = attachedToMusicAudio.GetComponent<AudioSource>();
+        if(GameManager.Instance.MusicOn == false)
+        {
+            musicAudio.volume = 0.0f;
+        }
+        else
+        {
+            musicAudio.volume = GameManager.Instance.MusicVolume;
+        }
+        
+        brickSounds = brickSoundsSource.GetComponent<AudioSource>();
+
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
         
