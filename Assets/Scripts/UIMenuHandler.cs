@@ -13,13 +13,15 @@ using UnityEditor;
 public class UIMenuHandler : MonoBehaviour
 {
     [SerializeField]
-    private GameObject inputField, acceptNameButton, playButton, playerButtons, settingsPanel, musicVolumeToggle;
+    private GameObject inputField, acceptNameButton, playButton, playerButtons, settingsPanel, musicVolumeToggle, soundEffectsToggleGameobject;
     private Button acceptNameButtonComponent, playButtonComponent;
     private string inputText;
-    private Toggle musicToggle;
-    private AudioSource menuSound;    
+    private Toggle musicToggle, soundEffectsToggle;
+    private AudioSource menuSound;
     [SerializeField]
-    private Slider musicVolumeSlider;
+    private AudioClip sampleClip;
+    [SerializeField]
+    private Slider musicVolumeSlider, soundEffectsVolumeSlider;
     [SerializeField]
     private GameObject attachedToMusicAudio;
     private AudioSource musicAudio;
@@ -30,17 +32,20 @@ public class UIMenuHandler : MonoBehaviour
         acceptNameButtonComponent = acceptNameButton.GetComponent<Button>();
         playButtonComponent = playButton.GetComponent<Button>();
         musicToggle = musicVolumeToggle.GetComponent<Toggle>();
+        soundEffectsToggle = soundEffectsToggleGameobject.GetComponent<Toggle>();
         musicAudio = attachedToMusicAudio.GetComponent<AudioSource>();
         menuSound = GetComponent<AudioSource>();
 
         UpdatePlayerName();
         UpdateMusicToggle();
         UpdateMusicVolume();
+        UpdateSoundEffectsToggle();
+        UpdateSoundEffectsVolume();
 
     }
     public void PlayButtonClicked()
     {
-        menuSound.Play();
+        PlayMenuSoundIfOn();
         GameManager.Instance.SavePlayerInfo(); // to transfer current settings to next scene
         SceneManager.LoadScene(1);
     }
@@ -57,9 +62,24 @@ public class UIMenuHandler : MonoBehaviour
         
     }
 
+
+    #region MUSIC RELATED FUNTIONS
+
     private void SetMusicOn(bool boolValue)
     {
         musicToggle.isOn = boolValue;
+    }
+
+    private void UpdateMusicToggle()
+    {
+        if (GameManager.Instance.MusicOn == true)
+        {
+            SetMusicOn(true);
+        }
+        else
+        {
+            SetMusicOn(false);
+        }
     }
 
     private void SetMusicVolume(float volume)
@@ -67,23 +87,6 @@ public class UIMenuHandler : MonoBehaviour
         musicVolumeSlider.value = volume;
         musicAudio.volume = volume;
         GameManager.Instance.MusicVolume = volume;
-    }
-
-    public void AcceptNameClicked()
-    {
-        if (GameManager.Instance.PlayerName != null)
-        {
-            menuSound.Play();
-            GameManager.Instance.PlayerName = GetInput();
-            playButtonComponent.interactable = true;
-        }
-    }
-
-    public void SettingsButtonClicked()
-    {
-        menuSound.Play();
-        playerButtons.SetActive(false);
-        settingsPanel.SetActive(true);
     }
 
     public void MusicOnChanged()
@@ -98,16 +101,122 @@ public class UIMenuHandler : MonoBehaviour
         GameManager.Instance.MusicVolume = newVolume;
     }
 
+    private void UpdateMusicVolume()
+    {
+        if (GameManager.Instance.MusicVolume != 0.0f)
+        {
+            SetMusicVolume(GameManager.Instance.MusicVolume);
+        }
+        else
+        {
+            SetMusicVolume(0.4f); // starting volume if not defined
+        }
+    }
+
+    #endregion MUSIC RELATED FUNTIONS
+
+
+    #region SOUND EFFECTS RELATED FUNCTIONS
+
+    private void SetSoundEffectsOn(bool boolValue)
+    {
+        soundEffectsToggle.isOn = boolValue;
+    }
+
+        private void UpdateSoundEffectsToggle()
+    {
+        if (GameManager.Instance.SoundEffectsOn == true)
+        {
+            SetSoundEffectsOn(true);
+        }
+        else
+        {
+            SetSoundEffectsOn(false);
+        }
+    }
+
+    private void SetSoundEffectVolume(float volume)
+    {
+        soundEffectsVolumeSlider.value = volume;
+        GameManager.Instance.SoundEffectVolume = volume;
+        // Set MenuSound here but
+        // SoundEffectVolume to be used to set volume of sounds
+        // on respective audiosources for
+        // respective gameobjects on different scenes
+        menuSound.volume = volume;
+
+    }
+
+    public void SoundEffectsOnChanged()
+    {
+        bool newBool = soundEffectsToggle.isOn;
+        GameManager.Instance.SoundEffectsOn = newBool;
+    }
+
+    public void SoundEffectsVolumeChanged()
+    {
+        float newVolume = soundEffectsVolumeSlider.value;
+        GameManager.Instance.SoundEffectVolume = newVolume;
+        // need a preview of volume change so play sample sound
+        if (GameManager.Instance.SoundEffectsOn) 
+        {
+            menuSound.PlayOneShot(sampleClip, newVolume);
+        }
+    }
+
+    private void UpdateSoundEffectsVolume()
+    {
+        if (GameManager.Instance.SoundEffectVolume != 0.0f)
+        {
+            SetSoundEffectVolume(GameManager.Instance.SoundEffectVolume);
+        }
+        else
+        {
+            SetSoundEffectVolume(0.4f); // starting volume if not defined
+        }
+    }
+
+    private void PlayMenuSoundIfOn()
+    {
+        if (GameManager.Instance.SoundEffectsOn)
+        {
+            menuSound.Play();
+        }
+    }
+
+
+    #endregion SOUND EFFECTS RELATED FUNCTIONS
+
+
+
+    public void AcceptNameClicked()
+    {
+        if (GameManager.Instance.PlayerName != null)
+        {
+            PlayMenuSoundIfOn();
+            GameManager.Instance.PlayerName = GetInput();
+            playButtonComponent.interactable = true;
+        }
+    }
+
+    public void SettingsButtonClicked()
+    {
+        PlayMenuSoundIfOn();
+        playerButtons.SetActive(false);
+        settingsPanel.SetActive(true);
+    }
+
+
     public void SettingsCloseButtonClicked ()
     {
-        menuSound.Play();
+        PlayMenuSoundIfOn();
         playerButtons.SetActive(true);
         settingsPanel.SetActive(false);
     }
 
     public void ExitButtonPressed()
     {
-        menuSound.Play();
+        PlayMenuSoundIfOn();
         GameManager.Instance.SavePlayerInfo();
         #if UNITY_EDITOR
             EditorApplication.ExitPlaymode();
@@ -137,30 +246,6 @@ public class UIMenuHandler : MonoBehaviour
         }
     }
 
-    private void UpdateMusicToggle()
-    {
-        if (GameManager.Instance.MusicOn == true)
-        {
-            SetMusicOn(true);
-        }
-        else
-        {
-            SetMusicOn(false);
-        }
-
-    }
-
-    private void UpdateMusicVolume()
-    {
-        if (GameManager.Instance.MusicVolume != 0.0f)
-        {
-            SetMusicVolume(GameManager.Instance.MusicVolume);
-        }
-        else
-        {
-            SetMusicVolume(0.4f);
-        }
-    }
 
 
 }

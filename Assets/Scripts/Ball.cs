@@ -12,6 +12,8 @@ public class Ball : MonoBehaviour
     {
         m_Rigidbody = GetComponent<Rigidbody>();
         brickSound = GetComponent<AudioSource>();
+
+        SetBrickSoundVolume();
     }
     
     private void OnCollisionExit(Collision other)
@@ -42,11 +44,23 @@ public class Ball : MonoBehaviour
         PlayBrickSound();
     }
 
-        private void PlayBrickSound()
+    private void PlayBrickSound()
     {
         // Attach sound to when brick is hit
         // to use in Brick script
         brickSound.Play();
+    }
+
+    private void SetBrickSoundVolume()
+    {
+        if (GameManager.Instance.SoundEffectsOn == true)
+        {
+            brickSound.volume = GameManager.Instance.SoundEffectVolume;
+        }
+        else 
+        {
+            brickSound.volume = 0.0f;
+        }
     }
 
 }

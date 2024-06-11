@@ -2942,7 +2942,7 @@ GameObject:
   - component: {fileID: 1222347974}
   - component: {fileID: 1222347975}
   m_Layer: 5
-  m_Name: Toggle
+  m_Name: SoundEffectsToggle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3015,7 +3015,19 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1160006010}
+      - m_Target: {fileID: 1620108513}
+        m_TargetAssemblyTypeName: UIMenuHandler, Assembly-CSharp
+        m_MethodName: SoundEffectsOnChanged
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1620108514}
         m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
         m_MethodName: set_enabled
         m_Mode: 0
@@ -4614,7 +4626,10 @@ MonoBehaviour:
   playerButtons: {fileID: 1605408375}
   settingsPanel: {fileID: 362083598}
   musicVolumeToggle: {fileID: 64796381}
+  soundEffectsToggleGameobject: {fileID: 1222347973}
+  sampleClip: {fileID: 8300000, guid: b5da7b24341d64759ad248063bb03222, type: 3}
   musicVolumeSlider: {fileID: 1246323436}
+  soundEffectsVolumeSlider: {fileID: 1739514345}
   attachedToMusicAudio: {fileID: 1160006005}
 --- !u!82 &1620108514
 AudioSource:
@@ -4872,7 +4887,7 @@ GameObject:
   - component: {fileID: 1739514344}
   - component: {fileID: 1739514345}
   m_Layer: 5
-  m_Name: Slider
+  m_Name: SoundEffectsSlider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4951,7 +4966,19 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1160006010}
+      - m_Target: {fileID: 1620108513}
+        m_TargetAssemblyTypeName: UIMenuHandler, Assembly-CSharp
+        m_MethodName: SoundEffectsVolumeChanged
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1620108514}
         m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
         m_MethodName: set_volume
         m_Mode: 0

@@ -83,16 +83,5 @@ public class GameManager : MonoBehaviour
         Debug.Log("End Score is " + PlayerScore + " for " + PlayerName);
     }
 
-    // public void ExitButtonPressed()
-    // {
-    //     Debug.Log("Player Name: " + PlayerName + " | Player Score: " + PlayerScore);
-    //     SavePlayerInfo();
-    //     #if UNITY_EDITOR
-    //         EditorApplication.ExitPlaymode();
-    //     #else
-    //         Application.Quit();
-    //     #endif
-    // }
-
 
 }
