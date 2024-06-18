@@ -10,7 +10,7 @@ public class MainManager : MonoBehaviour
     public int LineCount = 6;
     public Rigidbody Ball;
 
-    public Text ScoreText;
+    public Text ScoreText, highScoreText;
     public GameObject GameOverText;
 
     private bool m_Started = false;
@@ -24,6 +24,7 @@ public class MainManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        m_Points = 0; // Reset present player points
         GameManager.Instance.GameRunning = true;
         musicAudio = attachedToMusicAudio.GetComponent<AudioSource>();
         if(GameManager.Instance.MusicOn == false)
@@ -56,6 +57,7 @@ public class MainManager : MonoBehaviour
     void Awake()
     {
         ScoreText.text = GameManager.Instance.PlayerName + " Score : " + m_Points;
+        ShowHighScoreText();
     }
 
     private void Update()
@@ -80,6 +82,8 @@ public class MainManager : MonoBehaviour
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             }
         }
+
+        UpdateTopScoreText();
     }
 
     void AddPoint(int point)
@@ -93,5 +97,29 @@ public class MainManager : MonoBehaviour
         m_GameOver = true;
         GameManager.Instance.OnEndGame();
         GameOverText.SetActive(true);
+    }
+
+    private void ShowHighScoreText()
+    {
+        if (GameManager.Instance.TopScoreInfo() != null)
+        {
+            highScoreText.text = "Best Score: " + GameManager.Instance.TopScoreInfo().playerName + " : " + GameManager.Instance.TopScoreInfo().highScore;
+        }
+        else
+        {
+            highScoreText.text = "Best Score: Nobody : 0";
+        }
+    }
+
+    private void UpdateTopScoreText()
+    {
+        // to update and show the high score if previous score is beaten by current player
+        if (GameManager.Instance.TopScoreInfo() != null)
+        {
+            if (m_Points >= GameManager.Instance.TopScoreInfo().highScore)
+            {
+                highScoreText.text = "Best Score: " + GameManager.Instance.PlayerName + " : " + m_Points;
+            }
+        }
     }
 }

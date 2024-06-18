@@ -11,11 +11,14 @@ public class MainSceneUIHandler : MonoBehaviour
     void Start()
     {
         menuSound = GetComponent<AudioSource>();
+        menuSound.volume = GameManager.Instance.SoundEffectVolume;
     }
 
     public void BackToMenu()
     {
         menuSound.Play();
+        // // Update HighScores
+        // GameManager.Instance.AddHighScoreIfPossible(new HighScoreElement(GameManager.Instance.PlayerName, MainManager.m_Points));
         SceneManager.LoadScene(0);
     }
 

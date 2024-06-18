@@ -1,15 +1,13 @@
-using System;
+[System.Serializable]
 
-[Serializable]
 public class HighScoreElement
 {
     public string playerName;
-    public int points;
+    public int highScore;
 
     public HighScoreElement(string name, int points)
     {
         playerName = name;
-        this.points = points;
+        highScore = points;
     }
 }
-

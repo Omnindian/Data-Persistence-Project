@@ -29,7 +29,7 @@ public class UIMenuHandler : MonoBehaviour
 
     void Start()
     {
-        acceptNameButtonComponent = acceptNameButton.GetComponent<Button>();
+        // acceptNameButtonComponent = acceptNameButton.GetComponent<Button>();
         playButtonComponent = playButton.GetComponent<Button>();
         musicToggle = musicVolumeToggle.GetComponent<Toggle>();
         soundEffectsToggle = soundEffectsToggleGameobject.GetComponent<Toggle>();
@@ -41,11 +41,30 @@ public class UIMenuHandler : MonoBehaviour
         UpdateMusicVolume();
         UpdateSoundEffectsToggle();
         UpdateSoundEffectsVolume();
+        GameManager.Instance.GetHighScores();
 
     }
-    public void PlayButtonClicked()
+
+    void Update()
     {
+        if (GetInput() == null || GetInput() == "")
+        {
+            playButtonComponent.interactable = false;
+        }
+        else
+        {
+            playButtonComponent.interactable = true;
+        }
+    }
+        public void PlayButtonClicked()
+    {
+        GameManager.Instance.PlayerName = GetInput();
+        // if (GameManager.Instance.PlayerName != null)
+        // {
         PlayMenuSoundIfOn();
+            
+        // }
+
         GameManager.Instance.SavePlayerInfo(); // to transfer current settings to next scene
         SceneManager.LoadScene(1);
     }
@@ -189,15 +208,15 @@ public class UIMenuHandler : MonoBehaviour
 
 
 
-    public void AcceptNameClicked()
-    {
-        if (GameManager.Instance.PlayerName != null)
-        {
-            PlayMenuSoundIfOn();
-            GameManager.Instance.PlayerName = GetInput();
-            playButtonComponent.interactable = true;
-        }
-    }
+    // public void AcceptNameClicked()
+    // {
+    //     if (GameManager.Instance.PlayerName != null)
+    //     {
+    //         PlayMenuSoundIfOn();
+    //         GameManager.Instance.PlayerName = GetInput();
+    //         playButtonComponent.interactable = true;
+    //     }
+    // }
 
     public void SettingsButtonClicked()
     {
@@ -218,6 +237,7 @@ public class UIMenuHandler : MonoBehaviour
     {
         PlayMenuSoundIfOn();
         GameManager.Instance.SavePlayerInfo();
+        GameManager.Instance.AddHighScoreIfPossible(new HighScoreElement("Omni", Random.Range(0, 100)));
         #if UNITY_EDITOR
             EditorApplication.ExitPlaymode();
         #else
@@ -230,18 +250,18 @@ public class UIMenuHandler : MonoBehaviour
         if (GameManager.Instance.PlayerName != null)
         {
             SetInput(GameManager.Instance.PlayerName);
-            acceptNameButtonComponent.interactable = true;
+            // acceptNameButtonComponent.interactable = true;
             playButtonComponent.interactable = true;
         }
         else if (GameManager.Instance.GameRunning == true)
         {
             SetInput(GameManager.Instance.PlayerName);
-            acceptNameButtonComponent.interactable = true;
+            // acceptNameButtonComponent.interactable = true;
             playButtonComponent.interactable = true;
         }
         else
         {
-            acceptNameButtonComponent.interactable = false;
+            // acceptNameButtonComponent.interactable = false;
             playButtonComponent.interactable = false;
         }
     }
